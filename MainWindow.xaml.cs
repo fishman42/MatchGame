@@ -19,7 +19,7 @@ namespace MatchGame
 {
     public partial class MainWindow : Window
     {
-        // Variables and calls
+        // Variables
         DispatcherTimer timer = new DispatcherTimer();
         int tenthsOfSecondsElapsed;
         int matchesFound;
@@ -37,7 +37,7 @@ namespace MatchGame
             SetUpGame();
         }
 
-        // Timer
+        // Converts timer to string and displays
         private void Timer_Tick(object sender, EventArgs e)
         {
             tenthsOfSecondsElapsed++;
@@ -88,14 +88,14 @@ namespace MatchGame
                 currentTextBlock = sender as TextBlock;
                 if (findingMatch == false)
                 {
-                    clicks = 1;
+                    clicks++;
                     lastTextBlock = currentTextBlock;
                     currentTextBlock.Background = null;
                     findingMatch = true;
                 }
                 else if (currentTextBlock.Text == lastTextBlock.Text)
                 {
-                    clicks = 2;
+                    clicks++;
                     currentTextBlock.Background = null;
                     matchesFound++;
                     findingMatch = false;
@@ -103,7 +103,7 @@ namespace MatchGame
                 }
                 else
                 {
-                    clicks = 2;
+                    clicks++;
                     currentTextBlock.Background = null;
                     await Task.Delay(700);
                     currentTextBlock.Background = Brushes.Black;
