@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,14 +19,16 @@ namespace MatchGame
 {
     public partial class MainWindow : Window
     {
-        TextBlock currentTextBlock;
-        TextBlock lastTextBlock;
-        bool findingMatch = false;
+        // Variables and calls
         DispatcherTimer timer = new DispatcherTimer();
         int tenthsOfSecondsElapsed;
         int matchesFound;
+        int clicks = 0;
+        TextBlock currentTextBlock;
+        TextBlock lastTextBlock;
+        bool findingMatch = false;
 
-
+        // Main thread
         public MainWindow()
         {
             InitializeComponent();
@@ -82,27 +83,34 @@ namespace MatchGame
         // Handles two clicks, compares them, and either leaves them revealed or hides icons
         public async void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            currentTextBlock = sender as TextBlock;
-
-            if (findingMatch == false)
-            {
-                lastTextBlock = currentTextBlock;
-                currentTextBlock.Background = null;
-                findingMatch = true;
-            }
-            else if (currentTextBlock.Text == lastTextBlock.Text)
-            {
-                currentTextBlock.Background = null;
-                matchesFound++;
-                findingMatch = false;
-            }
-            else
-            {
-                currentTextBlock.Background = null;
-                await Task.Delay(700);
-                currentTextBlock.Background = Brushes.Black;
-                lastTextBlock.Background = Brushes.Black;
-                findingMatch = false;
+            if (clicks != 2)
+            { 
+                currentTextBlock = sender as TextBlock;
+                if (findingMatch == false)
+                {
+                    clicks = 1;
+                    lastTextBlock = currentTextBlock;
+                    currentTextBlock.Background = null;
+                    findingMatch = true;
+                }
+                else if (currentTextBlock.Text == lastTextBlock.Text)
+                {
+                    clicks = 2;
+                    currentTextBlock.Background = null;
+                    matchesFound++;
+                    findingMatch = false;
+                    clicks = 0;
+                }
+                else
+                {
+                    clicks = 2;
+                    currentTextBlock.Background = null;
+                    await Task.Delay(700);
+                    currentTextBlock.Background = Brushes.Black;
+                    lastTextBlock.Background = Brushes.Black;
+                    findingMatch = false;
+                    clicks = 0;
+                }
             }
         }
 
